@@ -1,0 +1,25 @@
+.LaneAsgn {
+  margin: auto;
+  width: 80%;
+  padding: 5%;
+  background-color: rgb(243, 243, 243);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 15px;
+  word-wrap: break-word; 
+}
+
+.GenerateBtn {
+  margin: 20px auto;
+  padding: 0.7em 1.7em;
+  background-color: #008cba;
+  color: black;
+  border: 2px solid #008cba;
+  border-radius: 5px;
+  color: #ffffff;
+  text-align: center;
+}
+
+.GenerateBtn:hover {
+  background-color: #03a1d6ad;
+  border: 2px solid #03a1d6ad;
+}

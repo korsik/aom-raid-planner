@@ -1,0 +1,39 @@
+.ul {
+  list-style: none;
+  padding: 0;
+  margin: 3%;
+}
+
+ul li:first-child {
+  margin: 0;
+}
+
+.li {
+  background-color: rgb(245, 245, 245);
+  padding: 5px;
+  display: block;
+  margin-top: 10px;
+  box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.2), 0 3px 7px 0 rgba(0, 0, 0, 0.19);
+  font-weight: bold;
+}
+
+.Team1 {
+  background-color: thistle;
+}
+
+.Team2 {
+  background-color: darkgoldenrod;
+}
+
+.Team3 {
+  background-color: cadetblue;
+}
+
+.ListContainer {
+  margin: auto;
+  width: 95%;
+  align-items: center;
+  background-color: white;
+  height: 300px;
+  overflow: auto;
+}

@@ -1,0 +1,42 @@
+.Wrapper {
+  margin: auto;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: ghostwhite;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  border-radius: 15px;
+  box-sizing: border-box;
+}
+
+.Btn {
+  margin: 20px auto;
+  padding: 0.7em 1.7em;
+  background-color: #008cba;
+  color: black;
+  border: 2px solid #008cba;
+  border-radius: 5px;
+  color: #ffffff;
+  text-align: center;
+}
+
+.Btn:hover {
+  background-color: #03a1d6ad;
+  border: 2px solid #03a1d6ad;
+}
+
+.Delete {
+  background-color: #f17443;
+  border: 2px solid #f17443;
+}
+
+.Delete:disabled {
+  background-color: #d1bfb8;
+  border: 2px solid #d1bfb8;
+}
+
+.Delete:hover {
+  background-color: #f17443c7;
+  border: 2px solid #f17443c7;
+}

@@ -1,0 +1,14 @@
+.IconDiv {
+  width: 90%;
+}
+.IconBtn {
+  /* margin: auto; */
+  color: rgb(24, 121, 212);
+  background-color: white;
+  position: relative;
+  float: right;
+  margin-top: 3%;
+  display: inline;
+  border-radius: 50%;
+  border: 0;
+}

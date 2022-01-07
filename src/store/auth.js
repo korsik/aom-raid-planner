@@ -59,7 +59,6 @@ const authSlice = createSlice({
         const time = new Date(
           new Date().getTime() + +actions.payload.expiresIn * 1000,
         );
-        console.log(time);
         const remainingTime = calculateRemainingTime(time);
 
         state.tokenData = {

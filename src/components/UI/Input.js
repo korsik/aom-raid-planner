@@ -46,7 +46,7 @@ const Input = (props) => {
           onChange={props.changed}
         >
           {role_options.map((option) => (
-            <option key={option.id} value={option.value}>
+            <option key={option.label} value={option.value}>
               {option.label}
             </option>
           ))}
@@ -63,7 +63,7 @@ const Input = (props) => {
           onChange={props.changed}
         >
           {power_options.map((option) => (
-            <option key={option.id} value={option.value}>
+            <option key={option.label} value={option.value}>
               {option.label}
             </option>
           ))}
@@ -80,7 +80,7 @@ const Input = (props) => {
           onChange={props.changed}
         >
           {lane_options.map((option) => (
-            <option key={option.id} value={option.value}>
+            <option key={option.label} value={option.value}>
               {option.label}
             </option>
           ))}
@@ -97,7 +97,7 @@ const Input = (props) => {
           onChange={props.changed}
         >
           {team_options.map((option) => (
-            <option key={option.id} value={option.value}>
+            <option key={option.label} value={option.value}>
               {option.label}
             </option>
           ))}

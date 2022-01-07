@@ -1,13 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import FirebaseAPI from "../../FirebaseAPI/FirebaseAPI";
 import {
   lane_options,
   power_options,
   role_options,
   team_options,
 } from "../../models/member_options";
-import { listActions } from "../../store";
+import { laneAssignActions, listActions } from "../../store";
 import Input, { input_style } from "../UI/Input";
 import Modal from "../UI/Modal";
 import classes from "./MemberForm.module.css";
@@ -15,8 +14,11 @@ import classes from "./MemberForm.module.css";
 const MemberForm = (props) => {
   const listState = useSelector((state) => state.list.updateList);
   const member = useSelector((state) => state.list.member);
-  const token = useSelector(state => state.auth.tokenData.token);
+  const memberList = useSelector((state) => state.list.list);
+
+  const isFieldValid = useSelector((state) => state.laneAssign.isFieldValid);
   const dispatch = useDispatch();
+
   const [name, setName] = useState(member ? member.name : "");
   const [role, setRole] = useState(
     member ? member.role : role_options[0].value,
@@ -32,7 +34,12 @@ const MemberForm = (props) => {
   );
 
   const nameChangeHandler = (event) => {
-    setName(event.target.value);
+    dispatch(
+      laneAssignActions.checkValidName({
+        name: event.target.value,
+        setName: setName,
+      }),
+    );
   };
 
   const roleChangeHandler = (event) => {
@@ -44,40 +51,55 @@ const MemberForm = (props) => {
   };
 
   const laneChangeHandler = (event) => {
-    setLane(event.target.value);
+    dispatch(
+      laneAssignActions.checkValidLane({
+        team: team,
+        lane: event.target.value,
+        memberList: memberList,
+        setLane: setLane,
+      }),
+    );
   };
 
   const teamChangeHandler = (event) => {
-    setTeam(event.target.value);
+    dispatch(
+      laneAssignActions.checkValidTeam({
+        team: event.target.value,
+        lane: lane,
+        memberList: memberList,
+        setTeam: setTeam,
+      }),
+    );
   };
 
   const formSubmitHandler = (event) => {
     event.preventDefault();
-    if (listState) {
-      const api = new FirebaseAPI();
-      api.updateMember(
-        {
-          name: name,
-          role: role,
-          power: power,
-          lane: lane,
-          team: team,
-        },
-        member.id,
-        token
-      );
-    }
+
+    dispatch(
+      listActions.addUpdateMember({
+        name: name,
+        role: role,
+        power: power,
+        lane: lane,
+        team: team,
+        id: member.id,
+      }),
+    );
     props.onClose();
   };
 
   const deleteMemberHandler = (event) => {
     event.preventDefault();
-    // console.log("DELETE THE MEMBER");
-    if (listState) {
-      dispatch(listActions.deleteListItem({id: member.id, token: token}));
-    }
+    dispatch(listActions.deleteListMember(member.id));
     props.onClose();
   };
+
+  useEffect(() => {
+    if (isFieldValid !== "") {
+      alert(isFieldValid);
+      dispatch(laneAssignActions.resetIsFieldValid());
+    }
+  }, [isFieldValid, dispatch]);
 
   return (
     <Modal onClose={props.onClose}>

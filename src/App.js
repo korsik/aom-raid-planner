@@ -18,7 +18,6 @@ function App() {
 
   useEffect(() => {
     if (token) {
-      // console.log(duration);
       setTimeout(() => {
         dispatch(authActions.logout());
       }, duration);

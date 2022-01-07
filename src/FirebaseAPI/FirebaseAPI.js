@@ -1,7 +1,7 @@
 class FirebaseAPI {
   constructor() {
     this.API_KEY = process.env.REACT_APP_API_KEY;
-    this.DB_URL = process.env.REACT_APP_DB_URL; 
+    this.DB_URL = process.env.REACT_APP_DB_URL;
   }
 
   async login(userData) {
@@ -39,33 +39,69 @@ class FirebaseAPI {
         alert(err.message);
       });
 
-      return auth;
+    return auth;
   }
 
   async addMember(member, token) {
-    await fetch(
-      `${this.DB_URL}/members.json?auth=${token}`,
-      {
-        method: "POST",
-        body: JSON.stringify(member),
-      },
-    );
+    const response = await fetch(`${this.DB_URL}/members.json?auth=${token}`, {
+      method: "POST",
+      body: JSON.stringify(member),
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          return res.json().then((data) => {
+            let errorMessage = "Fetch data Failed!";
+            if (data && data.error && data.error.message) {
+              errorMessage = data.error.message;
+            }
+            if (res.status === 401) {
+              errorMessage = "Unauthorized";
+            }
+            throw new Error(errorMessage);
+          });
+        }
+      })
+      .then((resData) => {
+        return resData.name;
+      });
+    return { ...{ id: response }, ...member };
   }
 
   async updateMember(member, id, token) {
-    await fetch(
+    const response = await fetch(
       `${this.DB_URL}/members/${id}/.json?auth=${token}`,
       {
         method: "PATCH",
         body: JSON.stringify(member),
       },
-    );
+    )
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          return res.json().then((data) => {
+            let errorMessage = "Fetch data Failed!";
+            if (data && data.error && data.error.message) {
+              errorMessage = data.error.message;
+            }
+            if (res.status === 401) {
+              errorMessage = "Unauthorized";
+            }
+            throw new Error(errorMessage);
+          });
+        }
+      })
+      .then((resData) => {
+        return resData;
+      });
+
+    return { ...{ id: id }, ...response };
   }
 
-  async getMember(dispatch, token) {
-    await fetch(
-      `${this.DB_URL}/members.json?auth=${token}`,
-    )
+  async getMember(token) {
+    const res = await fetch(`${this.DB_URL}/members.json?auth=${token}`)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -96,25 +132,21 @@ class FirebaseAPI {
               team: responseData[key].team,
             });
           }
-          dispatch(loadedMembers);
           return loadedMembers;
         }
       })
       .catch((err) => {
         alert(err.message);
       });
+    return res;
   }
 
   async deleteMember(id, token) {
-    await fetch(
-      `${this.DB_URL}/members/${id}.json?auth=${token}`,
-      {
-        method: "DELETE",
-      },
-    );
+    await fetch(`${this.DB_URL}/members/${id}.json?auth=${token}`, {
+      method: "DELETE",
+    });
+    return id;
   }
-
-  
 }
 
 export default FirebaseAPI;

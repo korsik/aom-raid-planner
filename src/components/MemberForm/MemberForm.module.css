@@ -36,6 +36,11 @@
   border: 2px solid #d1bfb8;
 }
 
+/* .Delete:disabled, hover {
+  background-color: #d1bfb8;
+  border: 2px solid #d1bfb8;
+} */
+
 .Delete:hover {
   background-color: #f17443c7;
   border: 2px solid #f17443c7;

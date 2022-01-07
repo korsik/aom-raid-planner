@@ -1,74 +1,108 @@
 import { createSlice } from "@reduxjs/toolkit";
+import LaneAssignmentManager from "../laneAssignment/LaneAssignmentManager";
 
 const initialLaneAssign = {
   laneAssignment: "",
+  isFieldValid: "",
 };
 
 const laneAssignSlice = createSlice({
   name: "laneAssignment",
   initialState: initialLaneAssign,
   reducers: {
+    resetIsFieldValid(state, action) {
+      state.isFieldValid = "";
+    },
     generateLaneAssignment(state, action) {
-      const tmpList = [...action.payload];
-      const result = [[], [], []];
-
-      let officers = tmpList.filter(
-        (member) => member.role === "officer" || member.role === "leader",
+      const nList = LaneAssignmentManager.standardLaneAssignment(
+        action.payload,
       );
-      officers = officers.sort(() => Math.random() - 0.5)
-
-      let members = tmpList.filter(function (obj) {
-        return officers.indexOf(obj) === -1;
-      });
-      members = members.sort(() => Math.random() - 0.5)
-
-      let n = 0;
-
-      // Add the officers on lanes
-      for (let line = 0; line < officers.length; line++) {
-        result[n].push(officers[line]);
-        n++;
-        if (n > 2) {
-          n = 0;
+      state.laneAssignment = nList;
+    },
+    checkValidName(state, action) {
+      if (action.payload.name === "") {
+        state.isFieldValid = "The name can't be empty!";
+      } else {
+        action.payload.setName(action.payload.name);
+      }
+    },
+    checkValidTeam(state, action) {
+      // const team = action.payload.team;
+      if (action.payload.lane === "random") {
+        if (checkTeamLength(action.payload.memberList, action.payload.team)) {
+          state.isFieldValid = "";
+          action.payload.setTeam(action.payload.team);
+        } else {
+          state.isFieldValid = "The team is full!";
+        }
+      } else if (action.payload.team === "random") {
+        state.isFieldValid = "";
+        action.payload.setTeam(action.payload.team);
+      } else {
+        if (
+          checkAssignedLaneInTeam(
+            action.payload.memberList,
+            action.payload.team,
+            action.payload.lane,
+          )
+        ) {
+          state.isFieldValid = "";
+          action.payload.setTeam(action.payload.team);
+        } else {
+          state.isFieldValid = "The team is full at this lane!";
         }
       }
-
-      // Add the members on lanes (n = where it left of from officers)
-      for (let line = 0; line < members.length; line++) {
-        result[n].push(members[line]);
-        n++;
-        if (n > 2) {
-          n = 0;
+    },
+    checkValidLane(state, action) {
+      if (action.payload.team !== "random") {
+        if (!checkTeamLength(action.payload.memberList, action.payload.team)) {
+          state.isFieldValid = "The team is Full";
+          return;
         }
       }
-
-      // Shuffle again the 3 teams
-      result[0] = result[0].sort(() => Math.random() - 0.5)
-      result[1] = result[1].sort(() => Math.random() - 0.5)
-      result[2] = result[2].sort(() => Math.random() - 0.5)
-
-      // Extract only the first 5 letters of member name or all
-      //  the name without the # if the name is < than 5 letters
-      for (let items = 0; items < result.length; items++) {
-        for (let member = 0; member < result[items].length; member++) {
-          let filterHashtag = result[items][member].name.substring(
-            0,
-            result[items][member].name.indexOf("#"),
-          );
-          if (filterHashtag.length > 5) {
-            filterHashtag = filterHashtag.substring(0, 6);
-          }
-          result[items][member] = " " + filterHashtag;
-        }
+      if (
+        checkAssignedLaneInTeam(
+          action.payload.memberList,
+          action.payload.team,
+          action.payload.lane,
+        )
+      ) {
+        state.isFieldValid = "";
+        action.payload.setLane(action.payload.lane);
+      } else {
+        state.isFieldValid = "This lane is full!";
       }
-      state.laneAssignment = "team1: "
-        .concat(result[0])
-        .concat(" team2:")
-        .concat(result[1])
-        .concat(" team3: ")
-        .concat(result[2]);
+
+      //
     },
   },
 });
+
+const checkTeamLength = (memberList, team) => {
+  const team1 = memberList.filter((member) => member.team === team);
+  if (team1.length <= 10) {
+    return true;
+  }
+  return false;
+};
+
+const checkAssignedLaneInTeam = (memberList, team, lane) => {
+  let ap = "";
+
+  if (team !== "random") {
+    ap = memberList.filter(
+      (member) => member.team === team && member.lane === lane,
+    );
+    if (ap.length > 0) {
+      return false;
+    }
+  } else {
+    ap = memberList.filter((member) => member.lane === lane);
+    if (ap.length > 2) {
+      return false;
+    }
+  }
+  return true;
+};
 
 export default laneAssignSlice;

@@ -5,39 +5,34 @@ import AddBtn from "./AddBtn/AddBtn";
 import List from "./ListItem/List";
 import LaneAssign from "./LaneAssign/LaneAssign";
 import MemberForm from "../MemberForm/MemberForm";
-import { authActions, laneAssignActions, listActions } from "../../store";
+import { laneAssignActions, listActions } from "../../store";
 import { Fragment, useEffect, useState } from "react";
-import FirebaseAPI from "../../FirebaseAPI/FirebaseAPI";
 
 const MainPage = () => {
-  const token = useSelector((state) => state.auth.tokenData.token);
   const dispatch = useDispatch();
 
-  const [list, setList] = useState([]);
+  let list = useSelector((state) => state.list.list);
   useEffect(() => {
-    if (token && token !== "") {
-      const api = new FirebaseAPI();
-      api.getMember(setList, token);
-    }
-  }, [token]);
+      dispatch(listActions.getMembers());
+  }, [dispatch]);
 
-  useEffect(() => {
-    dispatch(listActions.storeListItems(list));
-  }, [dispatch, list]);
-
-  const [cartIsShown, setCartIsShown] = useState(false);
+  const [formIsShown, setFormIsShown] = useState(false);
 
   const showMemberFormHandler = () => {
-    setCartIsShown(true);
+    setFormIsShown(true);
   };
 
   const hideMemberFormHandler = () => {
-    setCartIsShown(false);
+    setFormIsShown(false);
+  };
+
+  const addMemberFormHandler = () => {
+    dispatch(listActions.addListItem());
+    setFormIsShown(true);
   };
 
   function generateLaneAssignmentHandler() {
     dispatch(laneAssignActions.generateLaneAssignment(list));
-    // dispatch(authActions.logout());
   }
 
   return (
@@ -47,10 +42,10 @@ const MainPage = () => {
         <div className={classes.ListWrappper}>
           <h2>Members</h2>
           <List list={list} onOpen={showMemberFormHandler} />
-          <AddBtn onOpen={showMemberFormHandler} />
+          <AddBtn onOpen={addMemberFormHandler} />
         </div>
       </div>
-      {cartIsShown && <MemberForm onClose={hideMemberFormHandler} />}
+      {formIsShown && <MemberForm onClose={hideMemberFormHandler} />}
     </Fragment>
   );
 };

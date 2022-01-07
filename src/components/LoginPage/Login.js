@@ -18,7 +18,6 @@ const Login = (props) => {
     });
 
     auth.then((data) => {
-      // console.log(data);
       dispatch(
         authActions.login(
         data

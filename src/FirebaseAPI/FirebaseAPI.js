@@ -138,6 +138,8 @@ class FirebaseAPI {
       .catch((err) => {
         alert(err.message);
       });
+
+    if (!res) return [];
     return res;
   }
 

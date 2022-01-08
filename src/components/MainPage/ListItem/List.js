@@ -32,9 +32,9 @@ const List = (props) => {
   return (
     <div className={classes.ListContainer}>
       <ul className={classes.ul}>
-        {props.list.map((item) => (
+        { props.list ? props.list.map((item) => (
           <ListItem key={item.id} item={item} open={props.onOpen} />
-        ))}
+        )) : ""}
       </ul>
     </div>
   );

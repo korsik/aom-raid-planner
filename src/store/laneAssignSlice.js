@@ -20,14 +20,21 @@ const laneAssignSlice = createSlice({
       state.laneAssignment = nList;
     },
     checkValidName(state, action) {
-      if (action.payload.name === "") {
-        state.isFieldValid = "The name can't be empty!";
-      } else {
+      // if (action.payload.name === "") {
+      //   state.isFieldValid = "The name can't be empty!";
+      // } else {
         action.payload.setName(action.payload.name);
-      }
+      // }
     },
     checkValidTeam(state, action) {
-      // const team = action.payload.team;
+      if (
+        !action.payload.memberList ||
+        action.payload.memberList.length === 0
+      ) {
+        state.isFieldValid = "";
+        action.payload.setTeam(action.payload.team);
+        return;
+      }
       if (action.payload.lane === "random") {
         if (checkTeamLength(action.payload.memberList, action.payload.team)) {
           state.isFieldValid = "";
@@ -54,6 +61,15 @@ const laneAssignSlice = createSlice({
       }
     },
     checkValidLane(state, action) {
+      if (
+        !action.payload.memberList ||
+        action.payload.memberList.length === 0
+      ) {
+        state.isFieldValid = "";
+        action.payload.setLane(action.payload.lane);
+        return;
+      }
+
       if (action.payload.team !== "random") {
         if (!checkTeamLength(action.payload.memberList, action.payload.team)) {
           state.isFieldValid = "The team is Full";
@@ -72,8 +88,6 @@ const laneAssignSlice = createSlice({
       } else {
         state.isFieldValid = "This lane is full!";
       }
-
-      //
     },
   },
 });

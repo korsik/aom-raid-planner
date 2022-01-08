@@ -1,9 +1,9 @@
-import { limitNamesToFiceLetters, RandomizeMembers } from "./utils";
+import { assignMembersPositions, limitNamesToFiceLetters } from "./utils";
 
 const StandardLaneAssignment = (member) => {
   const tmpList = [...member];
 
-  const result = RandomizeMembers(tmpList);
+  const result = assignMembersPositions(tmpList);
 
   limitNamesToFiceLetters(result);
 
